@@ -23,6 +23,8 @@ Route::get('/produtos/novo', 'ProdutoController@novo');
 Route::post('/produtos/adiciona', 'ProdutoController@adiciona');
 Route::get('/login', 'LoginController@form');
 Route::post('/login', 'LoginController@login');
+Route::get('/produtos/atualiza/{id}', 'ProdutoController@atualiza');
+Route::post('/produtos/altera/{id}', 'ProdutoController@altera');
 
 
 //Route::get('/home', 'HomeController@index')->name('home');

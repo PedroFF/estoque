@@ -20,6 +20,11 @@ class ProdutoController extends Controller {
         return view('listagem')->with('produtos', $produtos);
     }
 
+    public function  atualiza($id){
+        $produto = Produto::find($id);
+        return view('form_altera')->with('p',$produto);
+    }
+
     public function mostra($id){
 
         $produto = Produto::find($id);
@@ -33,6 +38,12 @@ class ProdutoController extends Controller {
     public function adiciona(ProdutoRequest $request){
 
         Produto::create($request->all());
+        return redirect('/produtos')->withInput($request->only('nome'));
+    }
+
+    public function altera(ProdutoRequest $request){
+
+        Produto::update($request->all());
         return redirect('/produtos')->withInput($request->only('nome'));
     }
 

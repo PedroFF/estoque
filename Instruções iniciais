@@ -13,3 +13,4 @@ header
 
 @yield('conteudo')
 
+php artisan list
