@@ -18,3 +18,119 @@ php artisan list
 
 AJAX
 https://justlaravel.com/ajax-crud-operations-laravel/
+
+Controller
+
+<?php
+namespace app\Http\Controllers;
+use Illuminate\Http\Request;
+use App\Data;
+use Validator;
+use Response;
+use Illuminate\Support\Facades\Input;
+class IndexController extends Controller
+{
+    public function addItem(Request $request)
+    {
+        $rules = array(
+                'name' => 'required|alpha_num',
+        );
+        $validator = Validator::make(Input::all(), $rules);
+        if ($validator->fails()) {
+            return Response::json(array(
+                    'errors' => $validator->getMessageBag()->toArray(),
+            ));
+        } else {
+            $data = new Data();
+            $data->name = $request->name;
+            $data->save();
+            return response()->json($data);
+        }
+    }
+    public function readItems(Request $req)
+    {
+        $data = Data::all();
+        return view('welcome')->withData($data);
+    }
+    public function editItem(Request $req)
+    {
+        $data = Data::find($req->id);
+        $data->name = $req->name;
+        $data->save();
+        return response()->json($data);
+    }
+    public function deleteItem(Request $req)
+    {
+        Data::find($req->id)->delete();
+        return response()->json();
+    }
+}
+---------------------------------------------------------------
+Routes
+
+?php
+Route::get('/', 'IndexController@readItems');
+Route::post('addItem', 'IndexController@addItem');
+Route::post('editItem', 'IndexController@editItem');
+Route::post('deleteItem', 'IndexController@deleteItem');
+---------------------------------------------------------------
+View
+
+      <script src="{{ asset('js/app.js') }}"></script>
+      <script src="{{ asset('js/script.js') }}"></script>
+
+---------------------------------------------------------------
+Criar ajax na page
+$("#button").click(function(){
+    $.ajax({
+        type: 'post',
+        url: 'add',
+        data: {
+        '_token':$('input[name=_token]').val(),
+        'nome': $('input[name=noe]').val()
+        },
+        success: function(data){
+            $('#table').append("<tr class="item"+data.id+ "'><td>+data.ida+"</td><td>"+data.nome+"</td>)
+        }
+    });
+});
+
+---------------------------------------------------------------
+Fazer modal editar
+<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal" data-whatever="@getbootstrap">Editar/Excluir</button>
+
+<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Adicionar/Excluir</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form>
+          <div class="form-group">
+            <label for="recipient-name" class="col-form-label">Nome:</label>
+            <input type="text" class="form-control" id="recipient-name">
+          </div>
+
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary">Alterar</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+Fazer modal excluir
+<div class="modal-body">
+  <h5>Popover in a modal</h5>
+  <p>Deseja realmente excluir este item?</p>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+          <button type="button" class="btn btn-danger">Excluir</button>
+        </div>
+  </div>
