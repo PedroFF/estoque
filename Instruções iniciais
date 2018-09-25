@@ -14,3 +14,7 @@ header
 @yield('conteudo')
 
 php artisan list
+
+
+AJAX
+https://justlaravel.com/ajax-crud-operations-laravel/
